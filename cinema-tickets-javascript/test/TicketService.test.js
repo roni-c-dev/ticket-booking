@@ -7,6 +7,7 @@ describe('TicketService', () => {
     const requestChild = new TicketTypeRequest('CHILD', 3);
     const requestInfant =  new TicketTypeRequest('INFANT',1);
     const requestTwenty = new TicketTypeRequest('ADULT', 20);
+    // const requestBadTicketType = new TicketTypeRequest('FAKE',1);
     const goodAccountNum = 1200;
     const badAccountNum = '666';
 
@@ -23,9 +24,32 @@ describe('TicketService', () => {
     })
 
 
-    test('should throw error if too many seats requested', () => {
+    test('should return error if too many seats requested', () => {
         const result = myTicketService.purchaseTickets(goodAccountNum,[requestTwenty, requestChild]);
         expect(result).toEqual(new InvalidPurchaseException('Seat booking limit is 20'))
+    })
+
+    test('should return error if account number is a string', () => {
+        let result;
+        try {
+            result = myTicketService.purchaseTickets(badAccountNum,[requestAdult]);
+        } catch (err) {
+            result = err
+            expect(result).toEqual(new TypeError('accountId must be an integer'))
+        }
+        
+        
+    })
+
+    // TODO - can I fake this as it won't actually create the obj?
+    xtest('should return error if incorrect ticket type requested', () => {
+        let result;
+        try {
+            result = myTicketService.purchaseTickets(101, [requestBadTicketType]);
+        } catch (err) {
+            result = err;
+            expect(result).toEqual(new TypeError('type must be ADULT, CHILD, or INFANT'))
+        }
     })
 
 })
