@@ -2,6 +2,7 @@
 A NodeJS module to handle ticket booking
 
 // TODO - complete rules
+
 Returns InvalidPurchaseException for:
 
  - request to book tickets without an adult
