@@ -40,7 +40,7 @@ export default class TicketService {
   }
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
-        
+
     if (!this.#isAdultPresent(...ticketTypeRequests)){
       return new InvalidPurchaseException('An adult must be present')
     }
@@ -50,9 +50,13 @@ export default class TicketService {
     }
 
     else {
-      this.#paymentService.makePayment(accountId, this.#calculatePayment(...ticketTypeRequests))
-      this.#seatReserver.reserveSeat(accountId,this.#countSeatsInRequest(...ticketTypeRequests))
-      return 'Booking successful'
+      try {
+        this.#paymentService.makePayment(accountId, this.#calculatePayment(...ticketTypeRequests))
+        this.#seatReserver.reserveSeat(accountId,this.#countSeatsInRequest(...ticketTypeRequests))
+        return 'Booking successful'
+      } catch (err) {
+        return new InvalidPurchaseException('payment or seat reservation failure')
+      }
     }
     
   }

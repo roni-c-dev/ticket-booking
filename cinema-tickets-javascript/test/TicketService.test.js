@@ -44,7 +44,28 @@ describe('TicketService', () => {
         }          
     })
 
+    test('should return error if account number is zero or less', () => {
+        let result;
+        try {
+            result = myTicketService.purchaseTickets(0,[requestAdult]);
+        } catch (err) {
+            result = err
+            expect(result).toEqual(new TypeError('accountId must be an integer'));
+        }          
+    })
+
+    test('should return error if account number is zero or less', () => {
+        let result;
+        try {
+            result = myTicketService.purchaseTickets(-1,[requestAdult]);
+        } catch (err) {
+            result = err
+            expect(result).toEqual(new TypeError('accountId must be an integer'));
+        }          
+    })
+
     // TODO - integration type tests - calls to 
     // - payment request
     // - seat allocation
+    // - failure in payt req or seat allocation
 })
