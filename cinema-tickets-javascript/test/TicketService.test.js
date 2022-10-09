@@ -3,7 +3,6 @@ import InvalidPurchaseException from "../src/pairtest/lib/InvalidPurchaseExcepti
 import TicketService from "../src/pairtest/TicketService.js";
 
 describe('TicketService', () => {
-    // TODO - CONSIDER MOVE TO A MOCK FILE OR OBJECT
     const requestAdult = new TicketTypeRequest('ADULT', 1);
     const requestChild = new TicketTypeRequest('CHILD', 3);
     const requestInfant =  new TicketTypeRequest('INFANT',1);
@@ -16,23 +15,23 @@ describe('TicketService', () => {
     test('should return succesful if an adult request present', () => {
         const result = myTicketService.purchaseTickets(goodAccountNum,[requestChild, requestInfant, requestAdult]);
         expect(result).not.toEqual(new InvalidPurchaseException('An adult must be present'));
-        expect(result).toEqual('Booking successful')
+        expect(result).toEqual('Booking successful');        
     })
 
     test('should return succesful for exactly twenty ticket requests', () => {
         const result = myTicketService.purchaseTickets(goodAccountNum,[requestTwenty]);
         expect(result).not.toEqual(new InvalidPurchaseException('Seat booking limit is 20'));
-        expect(result).toEqual('Booking successful')
+        expect(result).toEqual('Booking successful');
     })
 
     test('should return error if no adult request present', () => {
         const result = myTicketService.purchaseTickets(goodAccountNum,[requestChild]);
-        expect(result).toEqual(new InvalidPurchaseException('An adult must be present'))
+        expect(result).toEqual(new InvalidPurchaseException('An adult must be present'));
     })
 
     test('should return error if too many seats requested', () => {
         const result = myTicketService.purchaseTickets(goodAccountNum,[requestTwenty, requestInfant]);
-        expect(result).toEqual(new InvalidPurchaseException('Seat booking limit is 20'))
+        expect(result).toEqual(new InvalidPurchaseException('Seat booking limit is 20'));
     })
 
     test('should return error if account number is not an integer', () => {
@@ -41,16 +40,11 @@ describe('TicketService', () => {
             result = myTicketService.purchaseTickets(badAccountNum,[requestAdult]);
         } catch (err) {
             result = err
-            expect(result).toEqual(new TypeError('accountId must be an integer'))
+            expect(result).toEqual(new TypeError('accountId must be an integer'));
         }          
     })
 
-    // TODO - tests for internal functions 
-    // seat count
-    // ticket count
-    // payment calculation
-    
-    // TODO - calls to internal objects
-    // payment request
-    // seat allocation
+    // TODO - integration type tests - calls to 
+    // - payment request
+    // - seat allocation
 })
