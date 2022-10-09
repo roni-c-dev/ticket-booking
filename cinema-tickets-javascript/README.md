@@ -1,5 +1,9 @@
 ### ticket-booking
-A NodeJS module to handle ticket booking
+A simple NodeJS module to handle ticket booking
+
+To begin - clone the repo and run `npm install` to install required dependencies
+
+To run unit tests - `npm test`
 
 Returns InvalidPurchaseException for:
 
