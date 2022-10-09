@@ -1,6 +1,7 @@
-import TicketTypeRequest from './lib/TicketTypeRequest';
+// import TicketTypeRequest from './lib/TicketTypeRequest';
 import InvalidPurchaseException from './lib/InvalidPurchaseException';
 import SeatReservationService from '../thirdparty/seatbooking/SeatReservationService.js';
+import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
 
 export default class TicketService {
 
@@ -8,6 +9,7 @@ export default class TicketService {
    * Should only have private methods other than the one below.
    */
   #seatReserver = new SeatReservationService()
+  #paymentService = new TicketPaymentService()
   
   /**
    * Check for the presence of adult & return a boolean
@@ -32,9 +34,39 @@ export default class TicketService {
     return ticketCount
   }
 
-  // TODO - countSeatsInRequest
-  // TODO - requestPayment
-  // TODO - allocateSeats
+  /**
+   * Count the number of seats in the request
+   */
+   #countSeatsInRequest(ticketTypeRequests){
+    let seatCount = 0
+    for(const req of ticketTypeRequests){
+      if (req.getTicketType() === 'ADULT' || req.getTicketType() === 'CHILD'){
+        seatCount += req.getNoOfTickets()
+      } else {
+        // NO ACTION TO INCREMENT AS INFANT REQUIRES NO SEAT
+      }
+      
+    }
+    return seatCount
+  }
+
+    /**
+   * Count the number of seats in the request
+   */
+     #calculatePayment(ticketTypeRequests){
+      let paymentDue = 0
+      for(const req of ticketTypeRequests){
+        if (req.getTicketType() === 'ADULT'){
+          paymentDue += req.getNoOfTickets() * 20
+        }
+        if (req.getTicketType() === 'CHILD'){
+          paymentDue += req.getNoOfTickets() * 10
+        }
+      
+      }
+      return paymentDue
+    }
+
   purchaseTickets(accountId, ...ticketTypeRequests) {
         
     if (!this.#isAdultPresent(...ticketTypeRequests)){
@@ -47,7 +79,9 @@ export default class TicketService {
 
     // TODO - else continue on to purchase using third party stuff
     else {
-      this.#seatReserver.reserveSeat(accountId,1)
+      // TODO - request payment
+      this.#paymentService.makePayment(accountId, this.#calculatePayment(...ticketTypeRequests))
+      this.#seatReserver.reserveSeat(accountId,this.#countSeatsInRequest(...ticketTypeRequests))
       return 'Booking successful'
     }
     

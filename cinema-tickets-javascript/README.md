@@ -1,8 +1,6 @@
 ### ticket-booking
 A NodeJS module to handle ticket booking
 
-// TODO - complete rules
-
 Returns InvalidPurchaseException for:
 
  - request to book tickets without an adult
@@ -10,4 +8,6 @@ Returns InvalidPurchaseException for:
 
 Returns TypeError for:
 
- - incorrectly formed request
+ - incorrectly formed account number (not an integer)
+ - incorrectly formed number of tickets (not an integer)
+ - incorrectly formed number of seats (not an integer)
