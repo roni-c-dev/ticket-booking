@@ -1,7 +1,7 @@
 import * as winston from "winston";
 
 const logConfiguration = {
-    'transports': [
+    "transports": [
        new winston.transports.Console()
     ] 
   }

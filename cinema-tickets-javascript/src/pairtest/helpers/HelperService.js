@@ -10,7 +10,7 @@ export class HelperService {
     isAdultPresent(ticketTypeRequests) {
         let adultPresent = false
         for(const req of ticketTypeRequests){ 
-        if(req.getTicketType() === 'ADULT'){
+        if(req.getTicketType() === "ADULT"){
             adultPresent = true
         }
         }
@@ -34,7 +34,7 @@ export class HelperService {
     countSeatsInRequest(ticketTypeRequests){
         let seatCount = 0
         for(const req of ticketTypeRequests){
-        if (req.getTicketType() === 'ADULT' || req.getTicketType() === 'CHILD'){
+        if (req.getTicketType() === "ADULT" || req.getTicketType() === "CHILD"){
             seatCount += req.getNoOfTickets()
         } 
         }
@@ -47,10 +47,10 @@ export class HelperService {
     calculatePayment(ticketTypeRequests){
         let paymentDue = 0
         for(const req of ticketTypeRequests){
-          if (req.getTicketType() === 'ADULT'){
+          if (req.getTicketType() === "ADULT"){
             paymentDue += req.getNoOfTickets() * 20
           }
-          if (req.getTicketType() === 'CHILD'){
+          if (req.getTicketType() === "CHILD"){
             paymentDue += req.getNoOfTickets() * 10
           }
         

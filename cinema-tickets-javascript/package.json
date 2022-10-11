@@ -7,11 +7,15 @@
   },
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:lint": "eslint .",
+    "test:lint:fix": "eslint --fix .",
+    "security:vulnerabilities": "npm audit",
+    "security:vulnerabilities:production": "npm audit --skip-dev"
   },
   "devDependencies": {
+    "eslint": "^8.25.0",
     "jest": "28.1.1",
-    "mocha": "10.0.0",
     "winston": "^3.8.2"
   }
 }

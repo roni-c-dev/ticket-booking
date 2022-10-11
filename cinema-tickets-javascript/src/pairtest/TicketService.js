@@ -1,9 +1,9 @@
-import InvalidPurchaseException from './lib/InvalidPurchaseException';
-import SeatReservationService from '../thirdparty/seatbooking/SeatReservationService.js';
-import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
-import { HelperService } from './helpers/HelperService.js';
+import InvalidPurchaseException from "./lib/InvalidPurchaseException";
+import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
+import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
+import { HelperService } from "./helpers/HelperService.js";
 
-import logger from '../pairtest/helpers/LoggerService.js';
+import logger from "../pairtest/helpers/LoggerService.js";
 
 export default class TicketService {
 
@@ -45,26 +45,26 @@ export default class TicketService {
 
     if (!Number.isInteger(accountId)){
       logger.log({
-        message: 'Ticket request accountId threw an Exception',
-        level: 'error'
+        message: "Ticket request accountId threw an Exception",
+        level: "error"
       })
-      return new InvalidPurchaseException('accountId must be an integer')
+      return new InvalidPurchaseException("accountId must be an integer")
     }
 
     if (!this.#isAdultPresent(...ticketTypeRequests)){
       logger.log({
-        message: 'Ticket request did not contain adult and threw an Exception',
-        level: 'error'
+        message: "Ticket request did not contain adult and threw an Exception",
+        level: "error"
       })
-      return new InvalidPurchaseException('An adult must be present')
+      return new InvalidPurchaseException("An adult must be present")
     }
 
     if (this.#countTicketsInRequest(...ticketTypeRequests) > 20) {
       logger.log({
-        message: 'Ticket request for more than 20 tickets',
-        level: 'error'
+        message: "Ticket request for more than 20 tickets",
+        level: "error"
       })
-      return new InvalidPurchaseException('Ticket booking limit is 20')
+      return new InvalidPurchaseException("Ticket booking limit is 20")
     }
 
     else {
@@ -72,21 +72,21 @@ export default class TicketService {
         this.#paymentService.makePayment(accountId, this.#calculatePayment(...ticketTypeRequests))  
       } catch (err) {
         logger.log({
-          message: 'An unknown error occurred in the payment service, please contact support',
-          level: 'error'
+          message: "An unknown error occurred in the payment service, please contact support",
+          level: "error"
         })
-        return new InvalidPurchaseException('payment failure: ' + err)
+        return new InvalidPurchaseException("payment failure: " + err)
       }
 
       try {
         this.#seatReserver.reserveSeat(accountId,this.#countSeatsInRequest(...ticketTypeRequests))
-        return 'Booking successful'
+        return "Booking successful"
       } catch (err) {
         logger.log({
-          message: 'An unknown error occurred in the seat booking service, please contact support',
-          level: 'error'
+          message: "An unknown error occurred in the seat booking service, please contact support",
+          level: "error"
         })
-        return new InvalidPurchaseException('seat booking failure: ' + err)
+        return new InvalidPurchaseException("seat booking failure: " + err)
       }
     }
     
