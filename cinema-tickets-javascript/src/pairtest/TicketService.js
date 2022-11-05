@@ -48,7 +48,7 @@ export default class TicketService {
         message: "Ticket request accountId threw an Exception",
         level: "error"
       })
-      return new InvalidPurchaseException("accountId must be an integer")
+      throw new InvalidPurchaseException("accountId must be an integer")
     }
 
     if (!this.#isAdultPresent(...ticketTypeRequests)){
@@ -56,7 +56,7 @@ export default class TicketService {
         message: "Ticket request did not contain adult and threw an Exception",
         level: "error"
       })
-      return new InvalidPurchaseException("An adult must be present")
+      throw new InvalidPurchaseException("An adult must be present")
     }
 
     if (this.#countTicketsInRequest(...ticketTypeRequests) > 20) {
@@ -64,7 +64,7 @@ export default class TicketService {
         message: "Ticket request for more than 20 tickets",
         level: "error"
       })
-      return new InvalidPurchaseException("Ticket booking limit is 20")
+      throw new InvalidPurchaseException("Ticket booking limit is 20")
     }
 
     else {
@@ -75,7 +75,7 @@ export default class TicketService {
           message: "An unknown error occurred in the payment service, please contact support",
           level: "error"
         })
-        return new InvalidPurchaseException("payment failure: " + err)
+        throw new InvalidPurchaseException("payment failure: " + err)
       }
 
       try {
@@ -86,7 +86,7 @@ export default class TicketService {
           message: "An unknown error occurred in the seat booking service, please contact support",
           level: "error"
         })
-        return new InvalidPurchaseException("seat booking failure: " + err)
+        throw new InvalidPurchaseException("seat booking failure: " + err)
       }
     }
     

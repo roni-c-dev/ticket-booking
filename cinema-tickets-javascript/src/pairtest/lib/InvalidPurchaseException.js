@@ -2,7 +2,8 @@ export default class InvalidPurchaseException extends Error {
 
     constructor(message) {
         super(message)  
-        // TODO - add logging?
+        // Logging has been added in the calling functions
+        // to provide meaningful logs
     }
 
 }
