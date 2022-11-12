@@ -7,7 +7,7 @@ export class HelperService {
     /**
     * Check that account number is valid
     */
-     isValid(accountId) {
+     isAccountIDValid(accountId) {
         return Boolean(Number.isInteger(accountId) && Math.sign(accountId > 0))
     }
 

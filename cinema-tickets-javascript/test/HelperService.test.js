@@ -11,23 +11,23 @@ describe("HelperService", () => {
         expect(HelperService).toBeTruthy();
     })
 
-    describe("isValid", () => {
+    describe("isAccountIDValid", () => {
         test("should contain a method to test if adult present", () => {
-            expect(HELPER.isValid).toBeTruthy();
+            expect(HELPER.isAccountIDValid).toBeTruthy();
         })
 
         test("should return true if accountId is a positive integer", () => {
-            const result = HELPER.isValid(123);
+            const result = HELPER.isAccountIDValid(123);
             expect(result).toBe(true);
         }) 
 
         test("should return false if accountId is zero", () => {
-            const result = HELPER.isValid(0);
+            const result = HELPER.isAccountIDValid(0);
             expect(result).toBe(false);
         })
         
         test("should return false if accountId is negative", () => {
-            const result = HELPER.isValid(-123);
+            const result = HELPER.isAccountIDValid(-123);
             expect(result).toBe(false);
         })
     })

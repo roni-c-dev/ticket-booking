@@ -103,4 +103,16 @@ describe("TicketService", () => {
         expect(myMockTPS).toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled(); 
     })
+
+    test("with failure in internal service it should throw error", () => {
+        const myFakeTicketService = jest.spyOn(TicketService.prototype, "purchaseTickets");
+        myFakeTicketService.mockImplementation(() => {
+            throw new Error("Fake internal error");
+        });
+        
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("Fake internal error"))
+
+    })
 })

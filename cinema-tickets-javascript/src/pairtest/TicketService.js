@@ -16,21 +16,48 @@ export default class TicketService {
   /**
   * Check for the presence of adult & return a boolean
   */
-  #isValid = (accountId) => {
-    return this.#helperService.isValid(accountId)
+  #isAccountIDValid = (accountId) => {
+    const isValid = this.#helperService.isAccountIDValid(accountId);
+
+    if(isValid) {
+      return true
+    } else {
+      logger.log({
+        message: "Ticket request accountId threw an Exception",
+        level: "error"
+      })
+      throw new InvalidPurchaseException("Invalid account ID provided")
+    }
   }
 
   /**
    * Check for the presence of adult & return a boolean
    */
   #isAdultPresent = (ticketTypeRequests) => {
-    return this.#helperService.isAdultPresent(ticketTypeRequests)
+    if(this.#helperService.isAdultPresent(ticketTypeRequests)) {
+      return true
+    } else {
+      logger.log({
+        message: "Ticket request did not contain adult and threw an Exception",
+        level: "error"
+      })
+      throw new InvalidPurchaseException("An adult must be present")
+    }
   }
   /**
    * Count the number of tickets in the request
    */
   #countTicketsInRequest = (ticketTypeRequests) => {
-    return this.#helperService.countTicketsInRequest(ticketTypeRequests)
+    const ticketCount = this.#helperService.countTicketsInRequest(ticketTypeRequests);
+    if( ticketCount > 20){
+      logger.log({
+        message: "Ticket request for more than 20 tickets",
+        level: "error"
+      })
+      throw new InvalidPurchaseException("Ticket booking limit is 20")
+    } else {
+      return ticketCount
+    }
   }
 
   /**
@@ -47,56 +74,73 @@ export default class TicketService {
     return this.#helperService.calculatePayment(ticketTypeRequests)
   }
 
+  /**
+  * Overall calculation to determine that a request is valid
+  */
+   #isRequestValid = (accountId, ticketTypeRequests) => {
+     // valid account id, adult present, less than 20 tickets in request
+    return this.#isAccountIDValid(accountId) && 
+            this.#isAdultPresent(ticketTypeRequests) &&
+            this.#countTicketsInRequest(ticketTypeRequests) <= 20
+  }
 
-
-  purchaseTickets(accountId, ...ticketTypeRequests) {
-
-    if (!this.#isValid(accountId)){
+  /**
+   * Make a payment
+   * FOR DISCUSSION - WOULD THESE SIT BETTER IN HELPER SERVICE OR HERE? IS THERE A PATTERN?
+   */
+  #makePayment = (accountId, totalAmountToPay) => {
+    try {
+      this.#paymentService.makePayment(accountId, totalAmountToPay)  
       logger.log({
-        message: "Ticket request accountId threw an Exception",
+        message: "Successful payment",
+        level: "info"
+      })
+    } catch (err) {
+      logger.log({
+        message: "An unknown error occurred in the payment service, please contact support",
         level: "error"
       })
-      throw new InvalidPurchaseException("Invalid account ID provided")
+      throw new InvalidPurchaseException("payment failure: " + err)
     }
+  }
 
-    if (!this.#isAdultPresent(...ticketTypeRequests)){
+  /**
+   * Reserve seats
+   * FOR DISCUSSION - WOULD THESE SIT BETTER IN HELPER SERVICE OR HERE? IS THERE A PATTERN?
+   */
+  #reserveSeats = (accountId, totalSeatsToReserve) => {
+    try {
+      this.#seatReserver.reserveSeat(accountId, totalSeatsToReserve)
       logger.log({
-        message: "Ticket request did not contain adult and threw an Exception",
+        message: "Successful booking",
+        level: "info"
+      })
+    } catch (err) {
+      logger.log({
+        message: "An unknown error occurred in the seat booking service, please contact support",
         level: "error"
       })
-      throw new InvalidPurchaseException("An adult must be present")
+      throw new InvalidPurchaseException("seat booking failure: " + err)
     }
+  }
 
-    if (this.#countTicketsInRequest(...ticketTypeRequests) > 20) {
+  purchaseTickets(accountId, ...ticketTypeRequests) {   
+
+    // FOR DISCUSSION - COVERING THE ELSE BRANCH?
+    // WITH EXISTING ERRORS COVERED IN EACH FUNCTION THERE DOESN'T SEEM A WAY TO REACH IT
+    if (this.#isRequestValid(accountId, ...ticketTypeRequests)){
+      const totalAmountToPay = this.#calculatePayment(...ticketTypeRequests);
+      const totalSeatsToReserve = this.#countSeatsInRequest(...ticketTypeRequests);
+
+      this.#makePayment(accountId, totalAmountToPay);
+      this.#reserveSeats(accountId, totalSeatsToReserve);
+      
       logger.log({
-        message: "Ticket request for more than 20 tickets",
-        level: "error"
+        message: "Payment and reservation completed successfully",
+        level: "info"
       })
-      throw new InvalidPurchaseException("Ticket booking limit is 20")
-    }
-
-    else {
-      try {
-        this.#paymentService.makePayment(accountId, this.#calculatePayment(...ticketTypeRequests))  
-      } catch (err) {
-        logger.log({
-          message: "An unknown error occurred in the payment service, please contact support",
-          level: "error"
-        })
-        throw new InvalidPurchaseException("payment failure: " + err)
-      }
-
-      try {
-        this.#seatReserver.reserveSeat(accountId,this.#countSeatsInRequest(...ticketTypeRequests))
-        return "Booking successful"
-      } catch (err) {
-        logger.log({
-          message: "An unknown error occurred in the seat booking service, please contact support",
-          level: "error"
-        })
-        throw new InvalidPurchaseException("seat booking failure: " + err)
-      }
-    }
+      return "Booking successful"    
+    } 
     
   }
 }
