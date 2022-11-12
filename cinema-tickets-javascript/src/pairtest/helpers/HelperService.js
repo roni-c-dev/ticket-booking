@@ -5,6 +5,13 @@
  */
 export class HelperService {
     /**
+    * Check that account number is valid
+    */
+     isValid(accountId) {
+        return Boolean(Number.isInteger(accountId) && Math.sign(accountId > 0))
+    }
+
+    /**
     * Check for the presence of adult & return a boolean
     */
     isAdultPresent(ticketTypeRequests) {

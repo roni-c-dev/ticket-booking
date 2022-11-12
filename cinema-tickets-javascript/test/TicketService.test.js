@@ -39,62 +39,44 @@ describe("TicketService", () => {
     })
 
     test("should return error if no adult request present", () => {
-        try {
-            const result = myTicketService.purchaseTickets(goodAccountNum,[requestChild]);
-            expect(result).not.toBeDefined();
-            expect(myMockTPS).not.toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled();
-        } catch (error) {
-            expect(error).toEqual(new InvalidPurchaseException("An adult must be present"));
-        }   
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestChild]);
+        }).toThrow(new InvalidPurchaseException("An adult must be present"))
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled();        
     })
 
     test("should return error if too many seats requested", () => {
-        try {
-            const result = myTicketService.purchaseTickets(goodAccountNum,[requestTwenty, requestInfant]);
-            expect(result).not.toBeDefined();
-            expect(myMockTPS).not.toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled();
-        } catch (error) {
-            expect(error).toEqual(new InvalidPurchaseException("Ticket booking limit is 20"));
-        }
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestTwenty, requestInfant]);
+        }).toThrow(new InvalidPurchaseException("Ticket booking limit is 20"))
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled(); 
                 
     })
 
     test("should return error if account number is not an integer", () => {
-        let result;
-        try {
-            result = myTicketService.purchaseTickets(badAccountNum,[requestAdult]);
-        } catch (err) {
-            result = err
-            expect(result).toEqual(new TypeError("accountId must be an integer"));
-            expect(myMockTPS).not.toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled();
-        }          
+        expect(() => {
+            myTicketService.purchaseTickets(badAccountNum, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled();        
     })
 
-    test("should return error if account number is zero or less", () => {
-        let result;
-        try {
-            result = myTicketService.purchaseTickets(0,[requestAdult]);
-        } catch (err) {
-            result = err
-            expect(result).toEqual(new TypeError("accountId must be an integer"));
-            expect(myMockTPS).not.toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled();
-        }          
+    test("should return error if account number is zero", () => {
+        expect(() => {
+            myTicketService.purchaseTickets(0, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled();         
     })
 
-    test("should return error if account number is zero or less", () => {
-        let result;
-        try {
-            result = myTicketService.purchaseTickets(-1,[requestAdult]);
-        } catch (err) {
-            result = err
-            expect(result).toEqual(new TypeError("accountId must be an integer"));
-            expect(myMockTPS).not.toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled();
-        }          
+    test("should return error if account number is below zero", () => {
+        expect(() => {
+            myTicketService.purchaseTickets(-1, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled();          
     })
 
     test("with random failure in external seat reservation service it should handle error", () => {
@@ -103,14 +85,11 @@ describe("TicketService", () => {
             throw new Error("User not found");
           });
 
-        try {
-            const result = myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
-            expect(result).not.toBeDefined();
-            expect(myMockTPS).toHaveBeenCalled();
-            expect(myMockSRS).toHaveBeenCalled(); 
-        } catch (error){
-            expect(error).toEqual(new InvalidPurchaseException("seat booking failure: Error: User not found"));
-        }
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("seat booking failure: Error: User not found"))
+        expect(myMockTPS).toHaveBeenCalled();
+        expect(myMockSRS).toHaveBeenCalled();   
     })
 
     test("with random failure in external ticket payment service it should handle error and not reserve seats", () => {
@@ -118,16 +97,10 @@ describe("TicketService", () => {
             throw new Error("User not found");
           });
 
-        try {
-            const result = myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
-            expect(result).not.toBeDefined();
-            expect(myMockTPS).toHaveBeenCalled();
-            expect(myMockSRS).not.toHaveBeenCalled(); 
-        } catch (error) {
-            expect(error).toEqual(new InvalidPurchaseException("payment failure: Error: User not found"));
-        }
-        
-          
-
+          expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("payment failure: Error: User not found"))
+        expect(myMockTPS).toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled(); 
     })
 })

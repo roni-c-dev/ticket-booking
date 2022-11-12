@@ -13,9 +13,12 @@
     "security:vulnerabilities": "npm audit",
     "security:vulnerabilities:production": "npm audit --skip-dev"
   },
+  "dependencies": {
+    "winston": "^3.8.2"
+  },
   "devDependencies": {
     "eslint": "^8.25.0",
-    "jest": "28.1.1",
-    "winston": "^3.8.2"
+    "jest": "28.1.1"
+    
   }
 }
