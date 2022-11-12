@@ -6,6 +6,7 @@ describe("TicketTypeRequest", () => {
     })
 
     test("should throw error if type does not exist", () => {
+        // Here I use try-catch rather than expect error as it's the constructor I am testing
         try {
             const ticketReq = new TicketTypeRequest("FAKE", 4);
             expect(ticketReq).toBeFalsy();
@@ -16,6 +17,7 @@ describe("TicketTypeRequest", () => {
     })
 
     test("should throw error if no of tickets not integer", () => {
+        // Here I use try-catch rather than expect error as it's the constructor I am testing
         try {
             const ticketReq = new TicketTypeRequest("ADULT", "FOUR");
             expect(ticketReq).toBeFalsy(); 
