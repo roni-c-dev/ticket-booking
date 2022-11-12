@@ -13,7 +13,13 @@ export default class TicketService {
   #seatReserver = new SeatReservationService()
   #paymentService = new TicketPaymentService()
   #helperService = new HelperService();
-  
+  /**
+  * Check for the presence of adult & return a boolean
+  */
+  #isValid = (accountId) => {
+    return this.#helperService.isValid(accountId)
+  }
+
   /**
    * Check for the presence of adult & return a boolean
    */
@@ -41,14 +47,16 @@ export default class TicketService {
     return this.#helperService.calculatePayment(ticketTypeRequests)
   }
 
+
+
   purchaseTickets(accountId, ...ticketTypeRequests) {
 
-    if (!Number.isInteger(accountId)){
+    if (!this.#isValid(accountId)){
       logger.log({
         message: "Ticket request accountId threw an Exception",
         level: "error"
       })
-      throw new InvalidPurchaseException("accountId must be an integer")
+      throw new InvalidPurchaseException("Invalid account ID provided")
     }
 
     if (!this.#isAdultPresent(...ticketTypeRequests)){

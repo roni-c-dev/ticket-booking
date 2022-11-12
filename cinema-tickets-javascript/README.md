@@ -8,7 +8,7 @@ NOTE - REQUIRES NODE VERSION ^16.15.1
 To run unit tests - `npm test`
 
 Returns InvalidPurchaseException for:
-
+ - request to book tickets for an invalid account number (including zero and negative integers)
  - request to book tickets without an adult
  - request to book more than 20 tickets in 1 transaction
 
