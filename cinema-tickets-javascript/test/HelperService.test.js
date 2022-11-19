@@ -4,16 +4,18 @@ import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
 describe("HelperService", () => {
     const HELPER = new HelperService();
     const adultReq = new TicketTypeRequest("ADULT",1);
+    const emptyAdultReq = new TicketTypeRequest("ADULT",0);
     const childReq = new TicketTypeRequest("CHILD",2);
     const infReq = new TicketTypeRequest("INFANT",1)
+    const tooManyInfantsReq = new TicketTypeRequest("INFANT",15);
 
     test("should exist", () => {
-        expect(HelperService).toBeTruthy();
+        expect(HelperService).toBeDefined();
     })
 
     describe("isAccountIDValid", () => {
         test("should contain a method to test if adult present", () => {
-            expect(HELPER.isAccountIDValid).toBeTruthy();
+            expect(HELPER.isAccountIDValid).toBeDefined();
         })
 
         test("should return true if accountId is a positive integer", () => {
@@ -34,7 +36,7 @@ describe("HelperService", () => {
 
     describe("isAdultPresent", () => {
         test("should contain a method to test if adult present", () => {
-            expect(HELPER.isAdultPresent).toBeTruthy();
+            expect(HELPER.isAdultPresent).toBeDefined();
         })
 
         test("should return true if adult is present", () => {
@@ -46,11 +48,37 @@ describe("HelperService", () => {
             const result = HELPER.isAdultPresent([childReq, infReq]);
             expect(result).toBe(false);
         }) 
+
+        test("should return false if adult request is present but set to zero - adult only request", () => {
+            const result = HELPER.isAdultPresent([emptyAdultReq]);
+            expect(result).toBe(false);
+        })
+
+        test("should return false if adult request is present but set to zero - mixed request", () => {
+            const result = HELPER.isAdultPresent([emptyAdultReq, childReq]);
+            expect(result).toBe(false);
+        })
     })
+
+    describe("areEnoughAdultsPresent", () => {
+        test("should contain a method to test if sufficient adults are present", () => {
+            expect(HELPER.areEnoughAdultsPresent).toBeDefined();
+        });
+
+        test("should return true if enough adults are present", () => {
+            const result = HELPER.areEnoughAdultsPresent([adultReq, childReq, infReq]);
+            expect(result).toBe(true);
+        });
+
+        test("should return false if not enough adults are present", () => {
+            const result = HELPER.areEnoughAdultsPresent([adultReq, childReq, tooManyInfantsReq]);
+            expect(result).toBe(false);
+        });  
+   })
   
     describe("countTicketsInRequest", () => {
         test("should contain a method to count tickets in request", () => {
-            expect(HELPER.countTicketsInRequest).toBeTruthy();
+            expect(HELPER.countTicketsInRequest).toBeDefined();
         })
         
         test("should count all types of ticket within ticket count", () => {
@@ -61,7 +89,7 @@ describe("HelperService", () => {
 
     describe("countSeatsInRequest", () => {
         test("should contain a method to count seats in request", () => {
-            expect(HELPER.countSeatsInRequest).toBeTruthy();
+            expect(HELPER.countSeatsInRequest).toBeDefined();
         })
         
         test("should count only adult and child tickets in seat count", () => {
@@ -72,7 +100,7 @@ describe("HelperService", () => {
     
     describe("calculatePayment", () => {
         test("should contain a method to calculate payment for the request", () => {
-            expect(HELPER.calculatePayment).toBeTruthy();
+            expect(HELPER.calculatePayment).toBeDefined();
         })
 
         test("should correctly calculate the cost of adult ticket request", () => {

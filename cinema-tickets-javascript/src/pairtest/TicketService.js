@@ -17,32 +17,28 @@ export default class TicketService {
   * Check for the presence of adult & return a boolean
   */
   #isAccountIDValid = (accountId) => {
-    const isValid = this.#helperService.isAccountIDValid(accountId);
-
-    if(isValid) {
-      return true
-    } else {
+    if (!this.#helperService.isAccountIDValid(accountId)) {
       logger.log({
         message: "Ticket request accountId threw an Exception",
         level: "error"
       })
       throw new InvalidPurchaseException("Invalid account ID provided")
-    }
+    } 
+    return true
   }
 
   /**
    * Check for the presence of adult & return a boolean
    */
   #isAdultPresent = (ticketTypeRequests) => {
-    if(this.#helperService.isAdultPresent(ticketTypeRequests)) {
-      return true
-    } else {
+    if (!this.#helperService.isAdultPresent(ticketTypeRequests)) {
       logger.log({
         message: "Ticket request did not contain adult and threw an Exception",
         level: "error"
       })
       throw new InvalidPurchaseException("An adult must be present")
-    }
+    } 
+    return true
   }
   /**
    * Count the number of tickets in the request
@@ -55,9 +51,8 @@ export default class TicketService {
         level: "error"
       })
       throw new InvalidPurchaseException("Ticket booking limit is 20")
-    } else {
-      return ticketCount
     }
+    return ticketCount
   }
 
   /**
@@ -73,15 +68,34 @@ export default class TicketService {
   #calculatePayment = (ticketTypeRequests) => {
     return this.#helperService.calculatePayment(ticketTypeRequests)
   }
-
+  
+  /**
+  * Overall calculation to determine that a request is valid
+  */
+  #areEnoughAdultsPresent = (ticketTypeRequests) => {
+    if (!this.#helperService.areEnoughAdultsPresent(ticketTypeRequests)){
+      logger.log({
+        message: "Request contained insufficient adults for number of infants requested",
+        level: "error"
+      })
+      throw new InvalidPurchaseException("All infants must sit on an adult lap")
+    }
+    return true
+  }
   /**
   * Overall calculation to determine that a request is valid
   */
    #isRequestValid = (accountId, ticketTypeRequests) => {
      // valid account id, adult present, less than 20 tickets in request
-    return this.#isAccountIDValid(accountId) && 
-            this.#isAdultPresent(ticketTypeRequests) &&
-            this.#countTicketsInRequest(ticketTypeRequests) <= 20
+     if (this.#isAccountIDValid(accountId) && 
+          this.#isAdultPresent(ticketTypeRequests) &&
+          this.#areEnoughAdultsPresent(ticketTypeRequests) &&
+          this.#countTicketsInRequest(ticketTypeRequests) <= 20){
+       return true
+     } 
+     return false
+     
+            
   }
 
   /**
@@ -125,10 +139,9 @@ export default class TicketService {
   }
 
   purchaseTickets(accountId, ...ticketTypeRequests) {   
+    const isRequestValid = this.#isRequestValid(accountId, ...ticketTypeRequests);
 
-    // FOR DISCUSSION - COVERING THE ELSE BRANCH?
-    // WITH EXISTING ERRORS COVERED IN EACH FUNCTION THERE DOESN'T SEEM A WAY TO REACH IT
-    if (this.#isRequestValid(accountId, ...ticketTypeRequests)){
+    if (isRequestValid){
       const totalAmountToPay = this.#calculatePayment(...ticketTypeRequests);
       const totalSeatsToReserve = this.#countSeatsInRequest(...ticketTypeRequests);
 
@@ -139,8 +152,9 @@ export default class TicketService {
         message: "Payment and reservation completed successfully",
         level: "info"
       })
-      return "Booking successful"    
+      return "Booking successful"  
     } 
+    
     
   }
 }
