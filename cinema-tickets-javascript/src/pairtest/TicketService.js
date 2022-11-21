@@ -8,7 +8,8 @@ import logger from "../pairtest/helpers/LoggerService.js";
 export default class TicketService {
 
   /**
-   * Should only have private methods other than the one below.
+   * Private service objects created from the provided classes.
+   * Outside of an ES6 module setup, would use dependency injection to make use of external services
    */
   #seatReserver = new SeatReservationService()
   #paymentService = new TicketPaymentService()
