@@ -8,6 +8,8 @@ describe("HelperService", () => {
     const childReq = new TicketTypeRequest("CHILD",2);
     const infReq = new TicketTypeRequest("INFANT",1)
     const tooManyInfantsReq = new TicketTypeRequest("INFANT",15);
+    const weirdZeroReq = [new TicketTypeRequest("ADULT", 0),(new TicketTypeRequest("CHILD", 0))];
+    const weirdNegativeReq = [new TicketTypeRequest("ADULT", 1),(new TicketTypeRequest("CHILD", -1))];
 
     test("should exist", () => {
         expect(HelperService).toBeDefined();
@@ -84,6 +86,16 @@ describe("HelperService", () => {
         test("should count all types of ticket within ticket count", () => {
             const result = HELPER.countTicketsInRequest([adultReq, childReq,infReq]);
             expect(result).toEqual(4);
+        });
+
+        test("should perform its calculations even with zero present", () => {
+            const result = HELPER.countTicketsInRequest(weirdZeroReq);
+            expect(result).toEqual(0);
+        });
+
+        test("should perform its calculations even with negative figures present", () => {
+            const result = HELPER.countTicketsInRequest(weirdNegativeReq);
+            expect(result).toEqual(0);
         });
     });
 
