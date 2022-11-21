@@ -11,9 +11,9 @@ Returns InvalidPurchaseException for:
  - request to book tickets for an invalid account number (including zero and negative integers)
  - request to book tickets without an adult
  - request to book more than 20 tickets in 1 transaction
+ - booking requests containing a number of infants more than available adult laps
+ - Failure in calls to external payment or seat reservation services
 
 Returns TypeError for:
-
- - incorrectly formed account number (not an integer)
  - incorrectly formed number of tickets (not an integer)
  - incorrectly formed number of seats (not an integer)

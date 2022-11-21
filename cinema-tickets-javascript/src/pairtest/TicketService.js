@@ -13,6 +13,7 @@ export default class TicketService {
   #seatReserver = new SeatReservationService()
   #paymentService = new TicketPaymentService()
   #helperService = new HelperService();
+
   /**
   * Check for the presence of adult & return a boolean
   */
@@ -132,6 +133,12 @@ export default class TicketService {
     };
   };
 
+  /**
+   * 
+   * @param { any } accountId 
+   * @param  {...any} ticketTypeRequests 
+   * @returns { string } confirmation message to be forwarded to customer
+   */
   purchaseTickets(accountId, ...ticketTypeRequests) {  
     try {
       this.#isRequestValid(accountId, ...ticketTypeRequests);
