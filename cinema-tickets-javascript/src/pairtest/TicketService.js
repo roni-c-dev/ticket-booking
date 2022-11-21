@@ -54,6 +54,13 @@ export default class TicketService {
       });
       throw new InvalidPurchaseException("Ticket booking limit is 20");
     };
+    if( ticketCount === 0){
+      logger.log({
+        message: "No tickets in the request",
+        level: "error"
+      });
+      throw new InvalidPurchaseException("Requests must be for at least one ticket");
+    };
     return ticketCount;
   };
 
