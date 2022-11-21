@@ -6,7 +6,7 @@
 export class HelperService {
     /**
      * Check that accountID is an integer above zero
-     * @param accountId 
+     * @param { any } accountId 
      * @returns { Boolean } 
      */
      isAccountIDValid(accountId) {
@@ -20,26 +20,28 @@ export class HelperService {
      */
     isAdultPresent(ticketTypeRequests) {
         // remember not to allow an adult request with a zero ticket count
-        if (ticketTypeRequests.some(el => el.getTicketType() === 'ADULT' && el.getNoOfTickets() > 0 )) {
+        if (ticketTypeRequests.some(el => el.getTicketType() === "ADULT" && el.getNoOfTickets() > 0 )) {
             return true;
-        }
+        };
         return false;
     };
 
     /**
      * Are sufficient adult laps present for the number of infants
-     * @param {*} ticketTypeRequests 
-     * @param {*} ticketCount 
-     * @returns 
+     * @param { [TicketTypeRequest] } ticketTypeRequests 
+     * @param { Integer } ticketCount 
+     * @returns { Boolean }
      */
     areEnoughAdultsPresent(ticketTypeRequests, infantsRequested = 0, adultsRequested = 0) {
         ticketTypeRequests.forEach(req => {
             if (req.getTicketType() === "INFANT") infantsRequested += req.getNoOfTickets();
             if (req.getTicketType() === "ADULT") adultsRequested += req.getNoOfTickets();
-        })
-        if (adultsRequested < infantsRequested) return false
-        return true
-    }
+        });
+        if (adultsRequested < infantsRequested) {
+            return false;
+        };
+        return true;
+    };
 
 
     /**
@@ -51,7 +53,7 @@ export class HelperService {
     countTicketsInRequest(ticketTypeRequests, ticketCount = 0){
         ticketTypeRequests.forEach(req => {
             ticketCount += req.getNoOfTickets();
-        })
+        });
         return ticketCount;
     };
 
@@ -61,15 +63,13 @@ export class HelperService {
      * @param { Integer } seatCount, initialised to 0
      * @returns { Integer } count of total seats requested
      */
-
-    // TODO - WHAT HAPPENS IF NOT ENOUGH ADULT LAPS?
     countSeatsInRequest(ticketTypeRequests, seatCount = 0){
         ticketTypeRequests.forEach(req => {
-            if (req.getTicketType() !== 'INFANT') {
+            if (req.getTicketType() !== "INFANT") {
                 seatCount += req.getNoOfTickets();
-            }
-        })
-        return seatCount
+            };
+        });
+        return seatCount;
     }
 
     /**
@@ -81,13 +81,13 @@ export class HelperService {
     calculatePayment(ticketTypeRequests, paymentDue = 0){
         ticketTypeRequests.forEach(req => {
           if (req.getTicketType() === "ADULT"){
-            paymentDue += req.getNoOfTickets() * 20
+            paymentDue += req.getNoOfTickets() * 20;
           }
           else if (req.getTicketType() === "CHILD"){
-            paymentDue += req.getNoOfTickets() * 10
-          }
+            paymentDue += req.getNoOfTickets() * 10;
+          };
           // no payment due for infant so no need to loop for this
         })
-        return paymentDue
+        return paymentDue;
     }
 }
