@@ -15,6 +15,7 @@ describe("TicketService", () => {
     const requestTooManyInfants = new TicketTypeRequest("INFANT",15);
     const weirdReq = [ new TicketTypeRequest("ADULT", 1), (new TicketTypeRequest("CHILD", -1))];
     const weirdNegativeReq = [ new TicketTypeRequest("ADULT", 1), (new TicketTypeRequest("CHILD", -2))];
+
     const goodAccountNum = 1200;
     const badAccountNum = "666";
     let myMockSRS, myMockTPS;
