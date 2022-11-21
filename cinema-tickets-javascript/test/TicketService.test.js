@@ -42,76 +42,76 @@ describe("TicketService", () => {
     test("should throw error if no adult request present", () => {
         expect(() => {
             myTicketService.purchaseTickets(goodAccountNum, [requestChild]);
-        }).toThrow(new InvalidPurchaseException("An adult must be present"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: An adult must be present"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled();        
-    })
+    });
 
     test("should throw error if insufficient adult requests present", () => {
         expect(() => {
             myTicketService.purchaseTickets(goodAccountNum, [requestAdult, requestTooManyInfants]);
-        }).toThrow(new InvalidPurchaseException("All infants must sit on an adult lap"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: All infants must sit on an adult lap"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled();        
-    })
+    });
 
     test("should throw error if too many seats requested", () => {
         expect(() => {
             myTicketService.purchaseTickets(goodAccountNum, [requestTwenty, requestInfant]);
-        }).toThrow(new InvalidPurchaseException("Ticket booking limit is 20"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Ticket booking limit is 20"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled(); 
                 
-    })
+    });
 
     test("should throw error if account number is not an integer", () => {
         expect(() => {
             myTicketService.purchaseTickets(badAccountNum, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Invalid account ID provided"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled();        
-    })
+    });
 
     test("should throw error if account number is zero", () => {
         expect(() => {
             myTicketService.purchaseTickets(0, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Invalid account ID provided"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled();         
-    })
+    });
 
     test("should throw error if account number is below zero", () => {
         expect(() => {
             myTicketService.purchaseTickets(-1, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("Invalid account ID provided"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Invalid account ID provided"));
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled();          
-    })
+    });
 
-    test("with random failure in external seat reservation service it should handle and throw error", () => {
+    test("with random failure in external seat reservation service it should handle and propagate error", () => {
 
         myMockSRS.mockImplementation(() => {
+            throw new Error("User not found");
+        });
+
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: seat booking failure: Error: User not found"));
+        expect(myMockTPS).toHaveBeenCalled();
+        expect(myMockSRS).toHaveBeenCalled();   
+    });
+
+    test("with random failure in external ticket payment service it should handle and propagate error and not reserve seats", () => {
+        myMockTPS.mockImplementation(() => {
             throw new Error("User not found");
           });
 
         expect(() => {
             myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("seat booking failure: Error: User not found"))
-        expect(myMockTPS).toHaveBeenCalled();
-        expect(myMockSRS).toHaveBeenCalled();   
-    })
-
-    test("with random failure in external ticket payment service it should handle and throw error and not reserve seats", () => {
-        myMockTPS.mockImplementation(() => {
-            throw new Error("User not found");
-          });
-
-          expect(() => {
-            myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("payment failure: Error: User not found"))
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: payment failure: Error: User not found"));
         expect(myMockTPS).toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled(); 
-    })
+    });
 
     test("with failure in internal service it should throw error", () => {
         const myFakeTicketService = jest.spyOn(TicketService.prototype, "purchaseTickets");
@@ -121,18 +121,6 @@ describe("TicketService", () => {
         
         expect(() => {
             myTicketService.purchaseTickets(goodAccountNum, [requestAdult]);
-        }).toThrow(new InvalidPurchaseException("Fake internal error"))
-    })
-
-    test("with invalid request it should not do stuff (TODO)", () => {
-        myTicketService.isRequestValid = false
-        const result = myTicketService.purchaseTickets(goodAccountNum,[requestAdult]);
-        expect(result).toBe(undefined)
-    })
-
-    test("with invalid request it should do stuff (TODO)", () => {
-        myTicketService.isRequestValid = true
-        const result = myTicketService.purchaseTickets(goodAccountNum,[requestAdult]);
-        expect(result).toBe(undefined)
-    })
+        }).toThrow(new InvalidPurchaseException("Fake internal error"));
+    });
 })
