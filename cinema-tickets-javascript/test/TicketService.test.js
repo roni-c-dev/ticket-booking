@@ -13,6 +13,9 @@ describe("TicketService", () => {
     const requestInfant =  new TicketTypeRequest("INFANT",1);
     const requestTwenty = new TicketTypeRequest("ADULT", 20);
     const requestTooManyInfants = new TicketTypeRequest("INFANT",15);
+    const weirdReq = [ new TicketTypeRequest("ADULT", 1), (new TicketTypeRequest("CHILD", -1))];
+    const weirdNegativeReq = [ new TicketTypeRequest("ADULT", 1), (new TicketTypeRequest("CHILD", -2))];
+
     const goodAccountNum = 1200;
     const badAccountNum = "666";
     let myMockSRS, myMockTPS;
@@ -62,6 +65,23 @@ describe("TicketService", () => {
         expect(myMockTPS).not.toHaveBeenCalled();
         expect(myMockSRS).not.toHaveBeenCalled(); 
                 
+    });
+
+    // Taking advantage of faulty behaviour in TicketTypeRequest which allows negative values present
+    test("should throw error if no seats requested", () => {
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, weirdReq);
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Requests must be for at least one ticket"));
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled(); 
+    });
+
+    test("should throw error if negative seats requested", () => {
+        expect(() => {
+            myTicketService.purchaseTickets(goodAccountNum, weirdNegativeReq);
+        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Requests must be for at least one ticket"));
+        expect(myMockTPS).not.toHaveBeenCalled();
+        expect(myMockSRS).not.toHaveBeenCalled(); 
     });
 
     test("should throw error if account number is not an integer", () => {
