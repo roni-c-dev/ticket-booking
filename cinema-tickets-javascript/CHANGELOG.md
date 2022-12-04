@@ -2,6 +2,9 @@
 All notable changes to this project to be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.0.2
+[containerise] - add Dockerfile to support running in containers
+
 ## v1.0.1
 [test-thrown-errors-correctly] - use anonymous function to test thrown errors
 

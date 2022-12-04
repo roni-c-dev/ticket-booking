@@ -16,6 +16,14 @@ To run API - `npm start` then either
 - run the following command ```curl --location --request GET 'http://localhost:8080' \
 --header 'accountid: frog'``` to view error
 
+#CONTAINERISATION
+A Dockerfile has been provided in order to run a containerised version of the application
+To run, use the following commands:
+- `docker build . -t <name>`
+- `docker run -p 5020:8080 -d <name>`
+
+And test using browser on port 5020, or amend the cURL requests given above to use port 5020
+
 
 Returns InvalidPurchaseException for:
  - request to book tickets for an invalid account number (including zero and negative integers)
