@@ -1,12 +1,10 @@
 import * as winston from "winston";
 
-function logFunction () {
-  const logConfiguration = {
-    "transports": [
-       new winston.transports.Console()
-    ] 
-  }
-  const logger = winston.createLogger(logConfiguration);
-  return logger
+const logConfiguration = {
+  "transports": [
+     new winston.transports.Console()
+  ] 
 }
-export default logFunction() 
+const logger = winston.createLogger(logConfiguration);
+
+export default logger 

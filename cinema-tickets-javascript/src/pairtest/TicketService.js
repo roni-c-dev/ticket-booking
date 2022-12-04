@@ -1,5 +1,5 @@
 
-import InvalidPurchaseException from "./lib/InvalidPurchaseException";
+import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
 import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
 import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
 import HelperService from "./utils/helper/HelperService.js";

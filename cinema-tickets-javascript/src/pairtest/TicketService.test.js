@@ -2,7 +2,7 @@ import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
 import TicketService from "./TicketService.js";
 import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
 import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
-import * as testdata from '../../test/testdata.js';
+import * as testdata from "../../test/testdata.js";
 
 // required import to enable full usage of jest mocks against ES6 modules
 import { jest}  from "@jest/globals"
