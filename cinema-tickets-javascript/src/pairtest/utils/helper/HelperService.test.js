@@ -1,15 +1,8 @@
-import { HelperService } from "../src/pairtest/helpers/HelperService.js";
-import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
+import HelperService from "./HelperService.js";
+import * as testdata from "../../../../test/testdata.js";
 
 describe("HelperService", () => {
-    const HELPER = new HelperService();
-    const adultReq = new TicketTypeRequest("ADULT",1);
-    const emptyAdultReq = new TicketTypeRequest("ADULT",0);
-    const childReq = new TicketTypeRequest("CHILD",2);
-    const infReq = new TicketTypeRequest("INFANT",1)
-    const tooManyInfantsReq = new TicketTypeRequest("INFANT",15);
-    const weirdZeroReq = [new TicketTypeRequest("ADULT", 0),(new TicketTypeRequest("CHILD", 0))];
-    const weirdNegativeReq = [new TicketTypeRequest("ADULT", 1),(new TicketTypeRequest("CHILD", -1))];
+    const HELPER = testdata.HELPER;
 
     test("should exist", () => {
         expect(HelperService).toBeDefined();
@@ -42,22 +35,22 @@ describe("HelperService", () => {
         });
 
         test("should return true if adult is present", () => {
-            const result = HELPER.isAdultPresent([adultReq, childReq, infReq]);
+            const result = HELPER.isAdultPresent([testdata.requestAdult, testdata.requestChild, testdata.requestInfant]);
             expect(result).toBe(true);
         });
 
         test("should return false if no adult is present", () => {
-            const result = HELPER.isAdultPresent([childReq, infReq]);
+            const result = HELPER.isAdultPresent([testdata.requestChild, testdata.requestInfant]);
             expect(result).toBe(false);
         }); 
 
         test("should return false if adult request is present but set to zero - adult only request", () => {
-            const result = HELPER.isAdultPresent([emptyAdultReq]);
+            const result = HELPER.isAdultPresent([testdata.emptyAdultRequest]);
             expect(result).toBe(false);
         });
 
         test("should return false if adult request is present but set to zero - mixed request", () => {
-            const result = HELPER.isAdultPresent([emptyAdultReq, childReq]);
+            const result = HELPER.isAdultPresent([testdata.emptyAdultRequest, testdata.requestChild]);
             expect(result).toBe(false);
         });
     });
@@ -68,12 +61,12 @@ describe("HelperService", () => {
         });
 
         test("should return true if enough adults are present", () => {
-            const result = HELPER.areEnoughAdultsPresent([adultReq, childReq, infReq]);
+            const result = HELPER.areEnoughAdultsPresent([testdata.requestAdult, testdata.requestChild, testdata.requestInfant]);
             expect(result).toBe(true);
         });
 
         test("should return false if not enough adults are present", () => {
-            const result = HELPER.areEnoughAdultsPresent([adultReq, childReq, tooManyInfantsReq]);
+            const result = HELPER.areEnoughAdultsPresent([testdata.requestAdult, testdata.requestChild, testdata.requestTooManyInfants]);
             expect(result).toBe(false);
         });  
    })
@@ -84,18 +77,18 @@ describe("HelperService", () => {
         });
         
         test("should count all types of ticket within ticket count", () => {
-            const result = HELPER.countTicketsInRequest([adultReq, childReq,infReq]);
-            expect(result).toEqual(4);
+            const result = HELPER.countTicketsInRequest([testdata.requestAdult, testdata.requestChild,testdata.requestInfant]);
+            expect(result).toEqual(5);
         });
 
         test("should perform its calculations even with zero present", () => {
-            const result = HELPER.countTicketsInRequest(weirdZeroReq);
+            const result = HELPER.countTicketsInRequest(testdata.weirdZeroRequest);
             expect(result).toEqual(0);
         });
 
         test("should perform its calculations even with negative figures present", () => {
-            const result = HELPER.countTicketsInRequest(weirdNegativeReq);
-            expect(result).toEqual(0);
+            const result = HELPER.countTicketsInRequest(testdata.weirdNegativeRequest);
+            expect(result).toEqual(-1);
         });
     });
 
@@ -105,8 +98,8 @@ describe("HelperService", () => {
         });
         
         test("should count only adult and child tickets in seat count", () => {
-            const result = HELPER.countSeatsInRequest([adultReq, childReq,infReq]);
-            expect(result).toEqual(3);
+            const result = HELPER.countSeatsInRequest([testdata.requestAdult, testdata.requestChild,testdata.requestInfant]);
+            expect(result).toEqual(4);
         });
     });
     
@@ -116,23 +109,23 @@ describe("HelperService", () => {
         });
 
         test("should correctly calculate the cost of adult ticket request", () => {
-            const result = HELPER.calculatePayment([adultReq]);
+            const result = HELPER.calculatePayment([testdata.requestAdult]);
             expect(result).toEqual(20);
         });
 
         test("should correctly calculate the cost of child ticket request", () => {
-            const result = HELPER.calculatePayment([childReq]);
-            expect(result).toEqual(20); //2 children on this request
+            const result = HELPER.calculatePayment([testdata.requestChild]);
+            expect(result).toEqual(30); //3 children on this request
         });
 
         test("should correctly calculate the cost of infant ticket request", () => {
-            const result = HELPER.calculatePayment([infReq]);
+            const result = HELPER.calculatePayment([testdata.requestInfant]);
             expect(result).toEqual(0); //infant goes free
         });
 
         test("should correctly calculate the cost of a collection of ticket requests", () => {
-            const result = HELPER.calculatePayment([adultReq, childReq, infReq]);
-            expect(result).toEqual(40);
+            const result = HELPER.calculatePayment([testdata.requestAdult, testdata.requestChild, testdata.requestInfant]);
+            expect(result).toEqual(50);
         });
     });
     

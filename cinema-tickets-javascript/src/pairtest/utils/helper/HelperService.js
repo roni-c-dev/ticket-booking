@@ -3,7 +3,7 @@
  * for testability as we can create an instance 
  * of this class as a private property in TicketService
  */
-export class HelperService {
+class HelperService {
     /**
      * Check that accountID is an integer above zero
      * @param { any } accountId 
@@ -19,6 +19,7 @@ export class HelperService {
      * @returns { Boolean }
      */
     isAdultPresent(ticketTypeRequests) {
+        console.log('ttt', ticketTypeRequests)
         // remember not to allow an adult request with a zero ticket count
         if (ticketTypeRequests.some(el => el.getTicketType() === "ADULT" && el.getNoOfTickets() > 0 )) {
             return true;
@@ -91,3 +92,9 @@ export class HelperService {
         return paymentDue;
     }
 }
+
+function helperFunction () {
+    return HelperService
+}
+
+export default helperFunction()
