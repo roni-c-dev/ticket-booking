@@ -1,8 +1,8 @@
-import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
-import InvalidPurchaseException from "../src/pairtest/lib/InvalidPurchaseException.js";
-import TicketService from "../src/pairtest/TicketService.js";
-import SeatReservationService from "../src/thirdparty/seatbooking/SeatReservationService.js";
-import TicketPaymentService from "../src/thirdparty/paymentgateway/TicketPaymentService.js";
+import TicketTypeRequest from "./lib/TicketTypeRequest.js";
+import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
+import TicketService from "./TicketService.js";
+import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
+import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
 
 // required import to enable full usage of jest mocks against ES6 modules
 import { jest}  from "@jest/globals"

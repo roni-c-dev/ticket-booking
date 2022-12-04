@@ -1,4 +1,4 @@
-import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
+import TicketTypeRequest from "./TicketTypeRequest.js";
 
 describe("TicketTypeRequest", () => {
     test("should exist", () => {

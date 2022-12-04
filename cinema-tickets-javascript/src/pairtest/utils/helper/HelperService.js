@@ -3,7 +3,7 @@
  * for testability as we can create an instance 
  * of this class as a private property in TicketService
  */
-export class HelperService {
+class HelperService {
     /**
      * Check that accountID is an integer above zero
      * @param { any } accountId 
@@ -91,3 +91,9 @@ export class HelperService {
         return paymentDue;
     }
 }
+
+function helperFunction () {
+    return HelperService
+}
+
+export default helperFunction()

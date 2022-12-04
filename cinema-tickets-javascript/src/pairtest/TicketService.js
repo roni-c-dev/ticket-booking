@@ -1,9 +1,10 @@
+
 import InvalidPurchaseException from "./lib/InvalidPurchaseException";
 import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
 import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
-import { HelperService } from "./helpers/HelperService.js";
+import HelperService from "./utils/helper/HelperService.js";
 
-import logger from "../pairtest/helpers/LoggerService.js";
+import logger from "./utils/logger/LoggerService.js";
 
 export default class TicketService {
 

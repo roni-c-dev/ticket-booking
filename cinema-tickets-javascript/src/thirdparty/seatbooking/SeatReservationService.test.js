@@ -1,4 +1,4 @@
-import SeatReservationService from "../src/thirdparty/seatbooking/SeatReservationService.js";
+import SeatReservationService from "./SeatReservationService.js";
 describe("SeatReservationService", () => {
     const sRS = new SeatReservationService();
     test("should exist", () => {

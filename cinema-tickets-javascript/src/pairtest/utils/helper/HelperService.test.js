@@ -1,5 +1,5 @@
-import { HelperService } from "../src/pairtest/helpers/HelperService.js";
-import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
+import HelperService from "./HelperService.js";
+import TicketTypeRequest from "../../lib/TicketTypeRequest.js";
 
 describe("HelperService", () => {
     const HELPER = new HelperService();
