@@ -8,9 +8,16 @@ import * as testdata from "../../test/testdata.js";
 
 const port = process.env.port || 8080;
 app.get("/", function (req, res) { 
-    const accountId = req.headers.accountid;
-    const result =  new TicketService().purchaseTickets(parseInt(accountId),[testdata.requestAdult]);
-    res.send(result)
+    try {
+      res.send({
+        response: new TicketService().purchaseTickets(parseInt(req.headers.accountid),[testdata.requestAdult])
+      })
+    } catch (err) {
+      res.status(500).send({
+        error: err.message
+      })
+    }
+    
 })
   
 app.listen(port, function () {
