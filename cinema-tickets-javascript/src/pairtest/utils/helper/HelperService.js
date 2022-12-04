@@ -3,7 +3,7 @@
  * for testability as we can create an instance 
  * of this class as a private property in TicketService
  */
-export class HelperService {
+ export default class HelperService {
     /**
      * Check that accountID is an integer above zero
      * @param { any } accountId 

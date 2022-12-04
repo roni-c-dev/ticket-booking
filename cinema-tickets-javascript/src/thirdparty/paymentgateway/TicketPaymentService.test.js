@@ -1,4 +1,4 @@
-import TicketPaymentService from "../src/thirdparty/paymentgateway/TicketPaymentService.js";
+import TicketPaymentService from "./TicketPaymentService.js";
 describe("TicketPaymentService", () => {
     const tPS = new TicketPaymentService();
 
