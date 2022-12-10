@@ -2,6 +2,8 @@
  * Immutable Object.
  */
 
+
+
 export default class TicketTypeRequest {
   #type;
 
@@ -14,6 +16,14 @@ export default class TicketTypeRequest {
 
     if (!Number.isInteger(noOfTickets)) {
       throw new TypeError("noOfTickets must be an integer");
+    }
+
+    /**
+     * Additional function to prevent bookings with zero or negative noOfTickets
+     * as the above function would let these through currently
+     */
+    if(Math.sign(noOfTickets) <= 0) {
+      throw new TypeError("noOfTickets must be a positive integer")
     }
 
     this.#type = type;

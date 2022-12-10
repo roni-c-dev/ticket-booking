@@ -62,23 +62,6 @@ describe("TicketService", () => {
                 
     });
 
-    // Taking advantage of faulty behaviour in TicketTypeRequest which allows negative values present
-    test("should throw error if no seats requested", () => {
-        expect(() => {
-            myTicketService.purchaseTickets(testdata.goodAccountNum, testdata.weirdRequest);
-        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Requests must be for at least one ticket"));
-        expect(myMockTPS).not.toHaveBeenCalled();
-        expect(myMockSRS).not.toHaveBeenCalled(); 
-    });
-
-    test("should throw error if negative seats requested", () => {
-        expect(() => {
-            myTicketService.purchaseTickets(testdata.goodAccountNum, testdata.weirdNegativeRequest);
-        }).toThrow(new InvalidPurchaseException("Error during booking: Error: Requests must be for at least one ticket"));
-        expect(myMockTPS).not.toHaveBeenCalled();
-        expect(myMockSRS).not.toHaveBeenCalled(); 
-    });
-
     test("should throw error if account number is not an integer", () => {
         expect(() => {
             myTicketService.purchaseTickets(testdata.badAccountNum, [testdata.requestAdult]);

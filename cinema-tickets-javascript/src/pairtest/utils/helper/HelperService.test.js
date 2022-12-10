@@ -43,15 +43,6 @@ describe("HelperService", () => {
             expect(result).toBe(false);
         }); 
 
-        test("should return false if adult request is present but set to zero - adult only request", () => {
-            const result = HELPER.isAdultPresent([testdata.emptyAdultRequest]);
-            expect(result).toBe(false);
-        });
-
-        test("should return false if adult request is present but set to zero - mixed request", () => {
-            const result = HELPER.isAdultPresent([testdata.emptyAdultRequest, testdata.requestChild]);
-            expect(result).toBe(false);
-        });
     });
 
     describe("areEnoughAdultsPresent", () => {
@@ -78,16 +69,6 @@ describe("HelperService", () => {
         test("should count all types of ticket within ticket count", () => {
             const result = HELPER.countTicketsInRequest([testdata.requestAdult, testdata.requestChild,testdata.requestInfant]);
             expect(result).toEqual(5);
-        });
-
-        test("should perform its calculations even with zero present", () => {
-            const result = HELPER.countTicketsInRequest(testdata.weirdZeroRequest);
-            expect(result).toEqual(0);
-        });
-
-        test("should perform its calculations even with negative figures present", () => {
-            const result = HELPER.countTicketsInRequest(testdata.weirdNegativeRequest);
-            expect(result).toEqual(-1);
         });
     });
 
