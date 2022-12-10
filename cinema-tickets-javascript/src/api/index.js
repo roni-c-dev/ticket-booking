@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(cors({
   // requests from our front end are ok (anywhere else seems sketchy)
-  origin: 'http://localhost:1234'
+  origin: "http://localhost:1234"
 }));
 
 const port = process.env.port || 8080;
