@@ -1,3 +1,4 @@
+import HelperService from "./utils/helper/HelperService.js";
 import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
 import TicketService from "./TicketService.js";
 import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
@@ -10,8 +11,11 @@ import { jest}  from "@jest/globals"
 describe("TicketService", () => {
     
     let myMockSRS, myMockTPS;
+    const srs = new SeatReservationService();
+    const tps = new TicketPaymentService();
+    const help = new HelperService();
 
-    const myTicketService =  new TicketService();
+    const myTicketService =  new TicketService(srs,tps,help);
 
     beforeEach(() => {
         // reset any previous mock and mock the appropriate services anew

@@ -1,11 +1,10 @@
-import HelperService from "./HelperService.js";
 import * as testdata from "../../../../test/testdata.js";
 
 describe("HelperService", () => {
     const HELPER = testdata.HELPER;
 
     test("should exist", () => {
-        expect(HelperService).toBeDefined();
+        expect(HELPER).toBeDefined();
     });
 
     describe("isAccountIDValid", () => {
