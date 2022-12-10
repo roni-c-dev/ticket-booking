@@ -1,26 +1,24 @@
 
 import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
-import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
-import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
-import HelperService from "./utils/helper/HelperService.js";
 
 import logger from "./utils/logger/LoggerService.js";
 
 export default class TicketService {
 
   /**
-   * Private service objects created from the provided classes.
-   * Outside of an ES6 module setup, would use dependency injection to make use of external services
-   */
-  #seatReserver = new SeatReservationService()
-  #paymentService = new TicketPaymentService()
-  #helperService = new HelperService();
+  * Use dependency injection so I don't need instantiated service objects here
+  */
+  constructor (seatReserver, paymentService, helperService){
+    this.seatReserver = seatReserver;
+    this.paymentService = paymentService;
+    this.helperService = helperService;
+  }
 
   /**
   * Check for the presence of adult & return a boolean
   */
   #isAccountIDValid = (accountId) => {
-    if (!this.#helperService.isAccountIDValid(accountId)) {
+    if (!this.helperService.isAccountIDValid(accountId)) {
       logger.log({
         message: "Ticket request accountId threw an Exception",
         level: "error"
@@ -34,7 +32,7 @@ export default class TicketService {
    * Check for the presence of adult & return a boolean
    */
   #isAdultPresent = (ticketTypeRequests) => {
-    if (!this.#helperService.isAdultPresent(ticketTypeRequests)) {
+    if (!this.helperService.isAdultPresent(ticketTypeRequests)) {
       logger.log({
         message: "Ticket request did not contain adult and threw an Exception",
         level: "error"
@@ -47,7 +45,7 @@ export default class TicketService {
    * Count the number of tickets in the request
    */
   #countTicketsInRequest = (ticketTypeRequests) => {
-    const ticketCount = this.#helperService.countTicketsInRequest(ticketTypeRequests);
+    const ticketCount = this.helperService.countTicketsInRequest(ticketTypeRequests);
     if( ticketCount > 20){
       logger.log({
         message: "Ticket request for more than 20 tickets",
@@ -69,21 +67,21 @@ export default class TicketService {
    * Count the number of seats in the request
    */
    #countSeatsInRequest = (ticketTypeRequests) => {
-     return this.#helperService.countSeatsInRequest(ticketTypeRequests);
+     return this.helperService.countSeatsInRequest(ticketTypeRequests);
    };
 
   /**
   * Calculate payment due for the request
   */
   #calculatePayment = (ticketTypeRequests) => {
-    return this.#helperService.calculatePayment(ticketTypeRequests);
+    return this.helperService.calculatePayment(ticketTypeRequests);
   };
   
   /**
   * Overall calculation to determine that a request is valid
   */
   #areEnoughAdultsPresent = (ticketTypeRequests) => {
-    if (!this.#helperService.areEnoughAdultsPresent(ticketTypeRequests)){
+    if (!this.helperService.areEnoughAdultsPresent(ticketTypeRequests)){
       logger.log({
         message: "Request contained insufficient adults for number of infants requested",
         level: "error"
@@ -109,7 +107,7 @@ export default class TicketService {
    */
   #makePayment = (accountId, totalAmountToPay) => {
     try {
-      this.#paymentService.makePayment(accountId, totalAmountToPay);  
+      this.paymentService.makePayment(accountId, totalAmountToPay);  
       logger.log({
         message: "Successful payment",
         level: "info"
@@ -128,7 +126,7 @@ export default class TicketService {
    */
   #reserveSeats = (accountId, totalSeatsToReserve) => {
     try {
-      this.#seatReserver.reserveSeat(accountId, totalSeatsToReserve);
+      this.seatReserver.reserveSeat(accountId, totalSeatsToReserve);
       logger.log({
         message: "Successful booking",
         level: "info"
