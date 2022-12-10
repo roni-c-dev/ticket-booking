@@ -41,18 +41,15 @@ describe("TicketTypeRequest", () => {
          }).toThrow(new TypeError("noOfTickets must be an integer"));
     });
 
-    // Exposing potential issue with TicketTypeRequest code as it will allow a request to be created with 0 or negative integer
-    // In reality I would add these tests which would fail 
-    // and report the issue via Gitlab or other means to the TicketRequestType dev
-    test.skip("should throw error if no of tickets is zero", () => {
+    test("should throw error if no of tickets is zero", () => {
         expect(() => {
             new TicketTypeRequest("ADULT", 0);
-         }).toThrow(new TypeError("noOfTickets must be an integer"));
+         }).toThrow(new TypeError("noOfTickets must be a positive integer"));
     });
 
-    test.skip("should not throw error if no of tickets is negative", () => {
+    test("should throw error if no of tickets is negative", () => {
         expect(() => {
             new TicketTypeRequest("ADULT", -1);
-         }).toThrow(new TypeError("noOfTickets must be an integer"));
+         }).toThrow(new TypeError("noOfTickets must be a positive integer"));
     });
 })
