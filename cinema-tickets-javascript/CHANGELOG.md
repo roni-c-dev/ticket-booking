@@ -2,6 +2,10 @@
 All notable changes to this project to be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v2.0.3
+[api-multiple-calls] - add the ability for multiple tickets to be requested as per app
+                     - move services to separate file
+
 ## v2.0.2
 [fix-api-for-depinject] - add services to be injected for API call
 

@@ -5,9 +5,7 @@ const app = express();
 
 import TicketService from "../pairtest/TicketService.js";
 import TicketTypeRequest from "../pairtest/lib/TicketTypeRequest.js";
-import SeatReservationService from "../thirdparty/seatbooking/SeatReservationService.js";
-import TicketPaymentService from "../thirdparty/paymentgateway/TicketPaymentService.js";
-import HelperService from "../pairtest/utils/helper/HelperService.js";
+import * as services from "../../test/services.js";
 
 // allow the app to use request body
 app.use(express.json());
@@ -19,17 +17,21 @@ app.use(cors({
 
 const port = process.env.port || 8080;
 
-// Under construction - currently handling only one ticket request at a time for testing purposes
 app.post("/", function (req, res) { 
 
   // services to be injected when creating the new TicketService object
-    const SRS = new SeatReservationService();
-    const TPS = new TicketPaymentService();
-    const HELPER = new HelperService();
+    const SRS = services.SRS;
+    const TPS = services.TPS;
+    const HELPER = services.HELPER;
+    const ticketRequests = [];
+
     try {
-      let newTicketReq = new TicketTypeRequest(req.body.tickettype, parseInt(req.body.ticketcount));
+      for(let tickreq of req.body.ticketRequests){
+        let newTicketReq = new TicketTypeRequest(tickreq.ticketType, parseInt(tickreq.noOfTickets));
+        ticketRequests.push(newTicketReq);
+      }
       res.send({
-        response: new TicketService(SRS, TPS, HELPER).purchaseTickets(parseInt(req.body.accountid),[newTicketReq])
+        response: new TicketService(SRS, TPS, HELPER).purchaseTickets(parseInt(req.body.accountid),ticketRequests)
       })
     } catch (err) {
       res.status(500).send({
@@ -39,8 +41,6 @@ app.post("/", function (req, res) {
     
 })
 
-
-  
 app.listen(port, function () {
     console.log(`Example app listening on port ${port}!`)
 })
