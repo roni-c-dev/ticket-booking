@@ -1,5 +1,4 @@
 import TicketTypeRequest from "../src/pairtest/lib/TicketTypeRequest.js";
-import HelperService from "../src/pairtest/utils/helper/HelperService.js";
 
 export const requestAdult =  new TicketTypeRequest("ADULT", 1);
 export const requestChild = new TicketTypeRequest("CHILD", 3);
@@ -9,5 +8,3 @@ export const requestTooManyInfants = new TicketTypeRequest("INFANT",15);
 
 export const goodAccountNum = 1200;
 export const badAccountNum = "666";
-
-export const HELPER = new HelperService();

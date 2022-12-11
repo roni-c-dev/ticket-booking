@@ -1,7 +1,7 @@
 {
   "name": "cinema-tickets-javascript",
   "description": "This is a coding exercise which will allow you to demonstrate how you code and your approach to a given problem.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "engines": {
     "node": ">=16.15.1"
   },
